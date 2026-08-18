@@ -3,7 +3,7 @@ import { Engine, type UIState } from "./game/engine";
 import { BIRDS } from "./game/birds";
 import {
   TitleScreen, IntroOverlay, HUD, EncounterPanel, GuideOverlay,
-  DialogBox, PauseOverlay, VictoryOverlay, TouchDeck,
+  DialogBox, PauseOverlay, VictoryOverlay, TouchDeck, DesktopBar,
 } from "./components/screens";
 
 const initialUI: UIState = {
@@ -134,37 +134,32 @@ export default function App() {
           {inWorld && <TouchDeck ui={ui} press={press} landscape={landscape} />}
         </div>
       ) : (
-        /* ── Modo escritorio: pantalla 16:9; con encuentro, pantalla arriba y panel abajo ── */
-        <div className={`h-full w-full flex ${ui.encounter || ui.dialog ? "flex-col" : "items-center justify-center"}`}>
-          <div
-            className="relative"
-            style={
-              ui.encounter || ui.dialog
-                ? {
-                    width: "min(100vw, calc(62vh * 16 / 9))",
-                    height: "min(62vh, calc(100vw * 9 / 16))",
-                    margin: "0 auto",
-                    flexShrink: 0,
-                  }
-                : {
-                    width: "min(100vw, calc(100vh * 16 / 9))",
-                    height: "min(100vh, calc(100vw * 9 / 16))",
-                  }
-            }
-          >
-            {canvas}
-            {showHud && <HUD ui={ui} press={press} />}
+        /* ── Modo escritorio: pantalla fija arriba + banda inferior siempre reservada ── */
+        <div className="h-full w-full flex flex-col">
+          <div className="relative flex-1 min-h-0">
+            <Frame>
+              {canvas}
+              {showHud && <HUD ui={ui} press={press} />}
+            </Frame>
           </div>
-          {ui.encounter && (
-            <div className="w-full max-w-3xl mx-auto px-2 pb-2 shrink min-h-0 overflow-y-auto scroll-pixel">
-              <EncounterPanel ui={ui} press={press} />
+          <div className="shrink-0 h-[200px] deck-bg border-t-4 border-line flex flex-col">
+            <div className="flex items-center justify-between px-3 h-7 shrink-0 bg-marsh-900/85 border-b-2 border-line/70">
+              <span className="font-pixel text-[7px] tracking-[0.22em] text-cream/45">
+                {ui.encounter || ui.dialog ? "CUADERNO DE CAMPO" : "AVES DEL ODIEL · MODO EXPEDICIÓN"}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className={`h-2 w-2 rounded-full ${ui.encounter ? "bg-amber shadow-[0_0_7px_rgba(255,180,58,0.9)]" : "bg-coral shadow-[0_0_7px_rgba(255,111,94,0.9)]"}`} />
+                <span className="h-2 w-2 rounded-full bg-marsh-600" />
+              </span>
             </div>
-          )}
-          {ui.dialog && (
-            <div className="w-full max-w-3xl mx-auto px-2 pb-2 shrink min-h-0 overflow-y-auto scroll-pixel">
-              <DialogBox ui={ui} press={press} />
+            <div className="flex-1 min-h-0 overflow-y-auto scroll-pixel p-2">
+              <div className="max-w-3xl mx-auto h-full">
+                {ui.encounter ? <EncounterPanel ui={ui} press={press} />
+                  : ui.dialog ? <DialogBox ui={ui} press={press} />
+                  : <DesktopBar ui={ui} />}
+              </div>
             </div>
-          )}
+          </div>
         </div>
       )}
 

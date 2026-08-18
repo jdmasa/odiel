@@ -239,10 +239,10 @@ export function HUD({ ui, press, touch = false }: { ui: UIState; press: Press; t
         </div>
       </div>
 
-      {/* pista contextual (oculta mientras se lee un diálogo) */}
-      {!ui.dialog && (
-        <div className={`absolute left-1/2 -translate-x-1/2 w-max max-w-[94%] ${touch ? "bottom-1.5" : "bottom-2"}`}>
-          <div key={h.hint} className={`anim-hint pixel-panel-deep px-3 py-1 font-body font-bold text-center ${touch ? "text-[10px]" : "py-1.5 text-[12px]"} text-cream/80`}>
+      {/* pista contextual: solo en táctil (en escritorio vive en la banda inferior) */}
+      {touch && !ui.dialog && (
+        <div className="absolute left-1/2 -translate-x-1/2 w-max max-w-[94%] bottom-1.5">
+          <div key={h.hint} className="anim-hint pixel-panel-deep px-3 py-1 font-body font-bold text-center text-[10px] text-cream/80">
             {h.hint}
           </div>
         </div>
@@ -520,6 +520,39 @@ export function VictoryOverlay({ ui, press }: { ui: UIState; press: Press }) {
             <button className="pixel-btn bg-amber text-marsh-950 px-5 py-3 text-[10px]" onClick={() => press("keep-playing")}>SEGUIR EXPLORANDO</button>
             <button className="pixel-btn bg-marsh-700 text-cream px-5 py-3 text-[10px]" onClick={() => press("restart")}>NUEVA PARTIDA</button>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Banda inferior de escritorio: teclado + registro de campo ─────────────
+export function DesktopBar({ ui }: { ui: UIState }) {
+  const keys: [string, string][] = [
+    ["W A S D", "caminar"],
+    ["E", "mirar / leer"],
+    ["1–4", "acciones"],
+    ["ESP", "cámara"],
+    ["G", "guía"],
+    ["ESC", "pausa"],
+  ];
+  return (
+    <div className="h-full flex items-stretch gap-5 px-4 py-1">
+      <div className="flex flex-col justify-center gap-1.5 shrink-0 border-r-2 border-line/60 pr-5">
+        <span className="font-pixel text-[7px] tracking-[0.2em] text-cream/40 mb-0.5">CONTROLES</span>
+        {keys.map(([k, label]) => (
+          <span key={k} className="flex items-center gap-2 font-body font-bold text-[12px] text-cream/65">
+            <kbd className="font-pixel text-[7px] text-aqua bg-marsh-900 border-2 border-line px-1.5 py-[3px] min-w-[38px] text-center">{k}</kbd>
+            {label}
+          </span>
+        ))}
+      </div>
+      <div className="flex-1 min-w-0 flex flex-col justify-center">
+        <div key={ui.hud.hint} className="anim-hint font-body font-bold text-[15px] text-cream/90 leading-snug">
+          {ui.hud.hint}
+        </div>
+        <div className="mt-2 flex items-center gap-2 font-pixel text-[7px] tracking-[0.18em] text-cream/40">
+          <IconFeather s={10} /> REGISTRO DE CAMPO · MARISMAS DEL ODIEL · HUELVA
         </div>
       </div>
     </div>

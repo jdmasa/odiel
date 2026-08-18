@@ -212,7 +212,9 @@ export class Engine {
       },
       encounter: enc
         ? {
-            birdId: enc.birdId, name: enc.name, sci: enc.sci, known: enc.known,
+            birdId: enc.birdId, name: enc.name, sci: enc.sci,
+            // se revela en cuanto se observa (la guía manda)
+            known: this.guide[enc.birdId]?.seen ?? enc.known,
             alerta: enc.alerta, maxAlerta: enc.maxAlerta, mode: enc.mode,
             text: enc.text, resultado: enc.resultado, canCebo: this.cebos > 0 && !enc.usedCebo,
           }
