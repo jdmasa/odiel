@@ -25,8 +25,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          rm -rf node_modules package-lock.json
-          npm install
+          rm -rf node_modules
+          if [ -f package-lock.json ]; then
+            npm ci --omit=optional
+          else
+            npm install --no-optional
+          fi
 
       - name: Build
         run: npm run build
