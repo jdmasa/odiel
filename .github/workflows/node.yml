@@ -27,9 +27,9 @@ jobs:
         run: |
           rm -rf node_modules
           if [ -f package-lock.json ]; then
-            npm ci --omit=optional
+            npm ci
           else
-            npm install --no-optional
+            npm install
           fi
 
       - name: Build
