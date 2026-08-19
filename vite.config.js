@@ -5,5 +5,5 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   base: '/odiel/',
   plugins: [react(), tailwindcss()],  
-  },
+
 });
